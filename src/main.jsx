@@ -10,6 +10,7 @@ import Signuppage from './components/Signuppage.jsx'
 import Signuppageadmin from './components/Signuppageadmin.jsx'
 import Signupseller from './components/Signupseller.jsx'
 import Signinpageseller from './components/Signinpageseller.jsx'
+import Signinpageforadmin from './components/Signinpageforadmin.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -33,6 +34,8 @@ createRoot(document.getElementById('root')).render(
  <Route path="/auth/seller/login" element={<Signinpageseller />} >
               </Route>
               <Route path="/admin/seller/signup" element={<Signuppageadmin />} >
+              </Route>
+                <Route path="/admin/login" element={<Signinpageforadmin />} >
               </Route>
     </Routes>
   </Router>

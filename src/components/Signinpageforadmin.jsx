@@ -1,47 +1,32 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const Signuppageadmin = () => {
-  const [formData, setFormData] = useState({
-    phoneNumber: '',
-    emailId: '',
-    password: '',
-  });
-  const [responseMessage, setResponseMessage] = useState('');
+const Signinpageforadmin = () => {
+  const [sellerId, setSellerId] = useState('');
+  const [emailOrPhone, setEmailOrPhone] = useState('');
+  const [password, setPassword] = useState('');
+  const [message, setMessage] = useState('');
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleLogin = async (e) => {
+    e.preventDefault(); // Prevent the default form submission behavior
     try {
-      // First request to create a new seller
-      const response = await axios.post('http://localhost:5000/admin/seller/signup', formData);
-      setResponseMessage(`${response.data.message} Seller ID: ${response.data.sellerId}`);
-
-      // If signup is successful, proceed with verification
-      const sellerId = response.data.sellerId;
-
-      // Second request to verify the seller
-      const verifyResponse = await axios.post('http://localhost:5000/admin/verify-seller', {
+      const response = await axios.post('http://localhost:5000/admin/login', {
         sellerId,
+        emailOrPhone,
+        password,
       });
-
-      // Handle the response from the verification request
-      if (verifyResponse.data.success) {
-        setResponseMessage(`${verifyResponse.data.message} - Logged In: ${verifyResponse.data.loggedIn}`);
+      if (response.data.success) {
+        setMessage(response.data.message);
+        console.log('Login successful:', response.data);
+        // Handle additional actions, e.g., saving sellerId, navigating, etc.
       } else {
-        setResponseMessage('Seller verification failed');
+        setMessage('Login failed. Please try again.');
       }
-
-      console.log('Request completed:', response.data);
     } catch (error) {
-      setResponseMessage(error.response?.data?.message || 'An error occurred. Please try again.');
+      setMessage(
+        error.response?.data?.message || 'An error occurred. Please try again.'
+      );
+      console.error('Login error:', error);
     }
   };
 
@@ -52,57 +37,82 @@ const Signuppageadmin = () => {
           <div className="flex items-center justify-center px-4 py-10 bg-white sm:px-6 lg:px-8 sm:py-16 lg:py-24">
             <div className="xl:w-full xl:max-w-sm 2xl:max-w-md xl:mx-auto">
               <h2 className="text-3xl font-bold leading-tight text-black sm:text-4xl">
-                Sign up as an Admin
+                Admin Sign In
               </h2>
-              <form onSubmit={handleSubmit} className="mt-8">
+              <p className="mt-2 text-base text-gray-600">
+                Don’t have an account?{' '}
+                <a
+                  href="#"
+                  title=""
+                  className="font-medium text-blue-600 transition-all duration-200 hover:text-blue-700 hover:underline focus:text-blue-700"
+                >
+                  Create a free account
+                </a>
+              </p>
+
+              <form onSubmit={handleLogin} className="mt-8">
                 <div className="space-y-5">
                   <div>
-                    <label htmlFor="phoneNumber" className="text-base font-medium text-gray-900">
-                      Phone Number
+                    <label
+                      htmlFor="sellerId"
+                      className="text-base font-medium text-gray-900"
+                    >
+                      Seller ID
                     </label>
                     <div className="mt-2.5">
                       <input
                         type="text"
-                        name="phoneNumber"
-                        id="phoneNumber"
-                        value={formData.phoneNumber}
-                        onChange={handleInputChange}
-                        placeholder="Enter your phone number"
+                        name="sellerId"
+                        id="sellerId"
+                        placeholder="Enter Seller ID"
+                        value={sellerId}
+                        onChange={(e) => setSellerId(e.target.value)}
                         className="block w-full p-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
+                        required
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label htmlFor="emailId" className="text-base font-medium text-gray-900">
-                      Email ID
+                    <label
+                      htmlFor="emailOrPhone"
+                      className="text-base font-medium text-gray-900"
+                    >
+                      Email or Phone
                     </label>
                     <div className="mt-2.5">
                       <input
-                        type="email"
-                        name="emailId"
-                        id="emailId"
-                        value={formData.emailId}
-                        onChange={handleInputChange}
-                        placeholder="Enter email to get started"
+                        type="text"
+                        name="emailOrPhone"
+                        id="emailOrPhone"
+                        placeholder="Enter email or phone"
+                        value={emailOrPhone}
+                        onChange={(e) => setEmailOrPhone(e.target.value)}
                         className="block w-full p-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
+                        required
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label htmlFor="password" className="text-base font-medium text-gray-900">
-                      Password
-                    </label>
+                    <div className="flex items-center justify-between">
+                      <label
+                        htmlFor="password"
+                        className="text-base font-medium text-gray-900"
+                      >
+                        Password
+                      </label>
+                    </div>
                     <div className="mt-2.5">
                       <input
                         type="password"
                         name="password"
                         id="password"
-                        value={formData.password}
-                        onChange={handleInputChange}
                         placeholder="Enter your password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                         className="block w-full p-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
+                        required
                       />
                     </div>
                   </div>
@@ -112,14 +122,16 @@ const Signuppageadmin = () => {
                       type="submit"
                       className="inline-flex items-center justify-center w-full px-4 py-4 text-base font-semibold text-white transition-all duration-200 bg-blue-600 border border-transparent rounded-md focus:outline-none hover:bg-blue-700 focus:bg-blue-700"
                     >
-                      Register as Seller
+                      Log in
                     </button>
                   </div>
                 </div>
               </form>
 
-              {responseMessage && (
-                <div className="mt-4 text-center text-blue-600">{responseMessage}</div>
+              {message && (
+                <div className="mt-4 text-center">
+                  <p className="text-sm text-gray-700">{message}</p>
+                </div>
               )}
             </div>
           </div>
@@ -129,14 +141,18 @@ const Signuppageadmin = () => {
               <img
                 className="w-full mx-auto"
                 src="https://cdn.rareblocks.xyz/collection/celebration/images/signup/1/cards.png"
-                alt="Illustration"
+                alt=""
               />
+
               <div className="w-full max-w-md mx-auto xl:max-w-xl">
-                <h3 className="text-2xl font-bold text-center text-black">Become a Seller</h3>
+                <h3 className="text-2xl font-bold text-center text-black">
+                  Design your own card
+                </h3>
                 <p className="leading-relaxed text-center text-gray-500 mt-2.5">
-                  Join our platform and grow your business with us. Easy registration and great
-                  support await.
+                  Amet minim mollit non deserunt ullamco est sit aliqua dolor do
+                  amet sint. Velit officia consequat duis.
                 </p>
+
                 <div className="flex items-center justify-center mt-10 space-x-3">
                   <div className="bg-orange-500 rounded-full w-20 h-1.5"></div>
                   <div className="bg-gray-200 rounded-full w-12 h-1.5"></div>
@@ -151,4 +167,4 @@ const Signuppageadmin = () => {
   );
 };
 
-export default Signuppageadmin;
+export default Signinpageforadmin;
