@@ -7,6 +7,7 @@ import Footer from './components/Footer.jsx'
 import Navbar from './components/Navbar.jsx'
 import Signinpage from './components/Signinpage.jsx'
 import Signuppage from './components/Signuppage.jsx'
+import Signuppageadmin from './components/Signuppageadmin.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -14,12 +15,15 @@ createRoot(document.getElementById('root')).render(
     <Routes>
               <Route path="/" element={<App />} >
               </Route>
+              {/* com */}
 <Route path="/auth/signup/" element={<Signuppage />} >
               </Route>
               <Route path="/auth/login" element={<Signinpage />} >
               </Route>
-          
- <Route path="/admin/seller/signup" element={<Signuppage />} >
+
+
+                        {/* com */}
+ <Route path="/admin/seller/signup" element={<Signuppageadmin />} >
               </Route>
 
  <Route path="/admin/login" element={<Navbar />} >
