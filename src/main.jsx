@@ -8,6 +8,8 @@ import Navbar from './components/Navbar.jsx'
 import Signinpage from './components/Signinpage.jsx'
 import Signuppage from './components/Signuppage.jsx'
 import Signuppageadmin from './components/Signuppageadmin.jsx'
+import Signupseller from './components/Signupseller.jsx'
+import Signinpageseller from './components/Signinpageseller.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -15,18 +17,22 @@ createRoot(document.getElementById('root')).render(
     <Routes>
               <Route path="/" element={<App />} >
               </Route>
-              {/* com */}
+              {/* com auth/signup/*/}
 <Route path="/auth/signup/" element={<Signuppage />} >
               </Route>
+                 {/* com auth/login */}
               <Route path="/auth/login" element={<Signinpage />} >
               </Route>
 
 
-                        {/* com */}
- <Route path="/admin/seller/signup" element={<Signuppageadmin />} >
+                        {/* com auth/seller/signup*/}
+ <Route path="/auth/seller/signup" element={<Signupseller />} >
               </Route>
 
- <Route path="/admin/login" element={<Navbar />} >
+                        {/* com  auth/seller/login*/}
+ <Route path="/auth/seller/login" element={<Signinpageseller />} >
+              </Route>
+              <Route path="/admin/seller/signup" element={<Signuppageadmin />} >
               </Route>
     </Routes>
   </Router>
